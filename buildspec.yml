@@ -1,12 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      docker: 19
-      nodejs: 18
-    commands:
-      - echo Installing dependencies
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -15,7 +9,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t brain-tasks-app .
+      - docker build -t brain-tasks-app ./brain-tasks-app
       - docker tag brain-tasks-app:latest 508955320023.dkr.ecr.ap-south-1.amazonaws.com/brain-tasks-app:latest
   post_build:
     commands:
