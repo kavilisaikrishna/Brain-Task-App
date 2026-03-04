@@ -1,17 +1,15 @@
-# Stage 1: build
+# Stage 1: Build React app
 FROM node:18-alpine AS build
 WORKDIR /app
-# Copy package.json and package-lock.json from app folder
-COPY brain-tasks-app/package*.json ./
-RUN npm install
-# Copy all source files
-COPY brain-tasks-app/ ./
-# Build the React app
-RUN npm run build
 
-# Stage 2: runtime
+COPY brain-tasks-app/package*.json ./brain-tasks-app/
+RUN npm install --prefix brain-tasks-app
+
+COPY brain-tasks-app/ ./brain-tasks-app
+RUN npm run build --prefix brain-tasks-app
+
+# Stage 2: Nginx runtime
 FROM nginx:alpine
-# Copy build output to nginx html folder
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/brain-tasks-app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
